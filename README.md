@@ -18,6 +18,8 @@ This implementation provides a demonstration and validation framework for order 
 - **Examples**: UserAccount, Workflow, and Configuration scenarios
 - **Failure Modes**: 5 common failure modes with demonstrations
 - **Testing Strategies**: 4 comprehensive testing approaches
+- **Detection Algorithms**: Heuristic and optimized order sensitivity detection
+- **Performance Benchmarks**: Comprehensive benchmarking for scalability, overhead, memory usage, and testing strategies
 
 ## 🏗️ Project Structure
 
@@ -26,8 +28,9 @@ OrderSensitivity/
 ├── src/
 │   ├── OrderSensitivity.Core/          # Core models, patterns, systems, utilities
 │   ├── OrderSensitivity.Examples/      # Concrete examples (UserAccount, Workflow, Configuration)
-│   ├── OrderSensitivity.FailureModes/ # 5 failure mode demonstrations
+│   ├── OrderSensitivity.FailureModes/  # 5 failure mode demonstrations
 │   ├── OrderSensitivity.Testing/       # Testing strategies (Sequence, PropertyBased, Replay, Differential)
+│   ├── OrderSensitivity.Benchmarks/    # Performance benchmarking suite
 │   └── OrderSensitivity.Demo/          # Console application demonstrating concepts
 └── tests/
     ├── OrderSensitivity.Core.Tests/
@@ -80,7 +83,11 @@ Core library containing:
 - **Models**: `State`, `Operation`, `OperationSequence`, `ExecutionOrder`, `StateTransition`
 - **Patterns**: `OrderSensitiveOperation`, `OrderInsensitiveOperation`, `StateDependentOperation`
 - **Systems**: `StatefulSystem`, `EventSourcingSystem`, `WorkflowSystem`
-- **Utilities**: `OrderValidator`, `StateComparer`
+- **Utilities**: 
+  - `OrderValidator`: Validates operation execution order
+  - `StateComparer`: Compares system states
+  - `HeuristicOrderSensitivityDetector`: Dependency-based and state-based heuristic detection (O(n²·T) complexity)
+  - `OptimizedOrderSensitivityDetector`: Caching, early termination, and parallel testing optimizations
 
 ### OrderSensitivity.Examples
 Concrete examples demonstrating order sensitivity:
@@ -102,6 +109,60 @@ Testing strategies for order-sensitive systems:
 2. **Property-Based Testing**: Random sequence generation
 3. **Replay Testing**: Record and replay validation
 4. **Differential Testing**: Compare different execution orders
+
+### OrderSensitivity.Benchmarks
+Performance benchmarking suite using BenchmarkDotNet:
+- **Scalability Benchmarks**: Performance across different sequence lengths
+- **Overhead Analysis**: Detection algorithm overhead measurements
+- **Memory Usage**: Memory consumption profiling
+- **Testing Strategy Performance**: Execution time comparison for all testing approaches
+
+Run benchmarks:
+```bash
+cd src/OrderSensitivity.Benchmarks
+dotnet run --configuration Release
+```
+
+Or use BenchmarkDotNet directly:
+```bash
+dotnet run --configuration Release -- --filter "*"
+```
+
+## 🔍 Detection Algorithms
+
+### Heuristic Detection
+
+The library provides heuristic-based detection algorithms that reduce complexity from O(n!·T) to O(n²·T) or O(d·T):
+
+```csharp
+// Dependency-based heuristic: tests only critical operation pairs
+var result = HeuristicOrderSensitivityDetector.DetectDependencyBased(
+    operations, 
+    initialState);
+
+// State-based heuristic: identifies state-dependent operations
+var result = HeuristicOrderSensitivityDetector.DetectStateBased(
+    operations, 
+    initialState);
+
+// Hybrid approach: combines dependency and state analysis
+var result = HeuristicOrderSensitivityDetector.DetectHybrid(
+    operations, 
+    initialState);
+```
+
+### Optimized Detection
+
+Optimized detection with caching and parallel execution:
+
+```csharp
+var detector = new OptimizedOrderSensitivityDetector(
+    enableEarlyTermination: true,
+    enableParallelTesting: true);
+
+var result = detector.DetectWithCaching(operations, initialState);
+// Result includes cache hit statistics and performance metrics
+```
 
 ## Usage Examples
 

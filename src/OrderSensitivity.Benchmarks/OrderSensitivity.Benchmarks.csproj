@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>12</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.12" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OrderSensitivity.Core\OrderSensitivity.Core.csproj" />
+    <ProjectReference Include="..\OrderSensitivity.Examples\OrderSensitivity.Examples.csproj" />
+    <ProjectReference Include="..\OrderSensitivity.Testing\OrderSensitivity.Testing.csproj" />
+  </ItemGroup>
+
+</Project>
+
